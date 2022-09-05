@@ -6,7 +6,6 @@
 
 <script>
 import StoreList from '@/components/StoreList.vue';
-// @ is an alias to /src
 
 export default {
   name: 'StoreView',

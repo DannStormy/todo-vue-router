@@ -29,7 +29,7 @@
 <script>
 import {format} from 'date-fns'
 import NavBar from './NavBar.vue';
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 export default {
     data: () => ({
         todo: "",
@@ -37,23 +37,25 @@ export default {
     }),
     methods: {
         addTodo() {
-            const uniqueID = Math.floor(Math.random() * Math.pow(10, 15));
-            const todo = {
-              name: this.todo,
-              id: uniqueID,
-              priority: 0,
-              completed: false,
-              added: new Date()
-            };
-            if (this.todo) {
-                this.todoList.push(todo);
-            }
-            this.todo = "";
+          if (!this.todo){
+            return
+          }
+          const uniqueID = Math.floor(Math.random() * Math.pow(10, 15));
+          const todo = {
+            name: this.todo,
+            id: uniqueID,
+            priority: 0,
+            completed: false,
+            added: new Date()
+          };
+
+          this.addTodoStore(todo)
+          this.todo = "";
         },
         delTodo(index) {
-            console.log("Index is: ", index);
-            console.log(this.todoList);
-            this.todoList.splice(index, 1);
+          console.log("Index is: ", index);
+          console.log(this.todoList);
+          this.todoList.splice(index, 1);
         },
         increasePriority(id) {
             const updatedTodo = this.todoList.map((todoItem) => {
@@ -79,29 +81,28 @@ export default {
             this.todo = editItem.name;
         },
         saveTodo(){
-          if (!this.todo){
-            return
-          }
+          // if (!this.todo){
+          //   return
+          // }
           const todoID = this.isEditing;
-          this.todoList.map((todoItem) => {
-            if (todoItem.id === todoID) {
-                todoItem.name = this.todo
-            }
-          });
+          this.saveTodoStore({id:todoID, name:this.todo})
+          // this.todoList.map((todoItem) => {
+          //   if (todoItem.id === todoID) {
+          //       todoItem.name = this.todo
+          //   }
+          // });
           this.todo = "";
           this.isEditing = null
         },
         formatDate(date){
           return format(date, 'do MMMM yyy hh:mm aaa')
-        }
+        },
+        ...mapMutations(['updateList']),
+        ...mapActions({addTodoStore: 'addTodo', saveTodoStore: 'saveTodo'})
     },
     computed: {
       ...mapState(['todoList']),
       ...mapGetters(['sortList']),
-      // sortList() {
-      //       return [...this.todoList].sort((a, b) => b.priority - a.priority);
-      //       // return this.todoList;
-      //   }
     },
     components: { NavBar }
 }
