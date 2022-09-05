@@ -9,7 +9,10 @@
       <div :class="['todo', {'editing': isEditing === todoItem.id}]" v-for="todoItem, index in sortList" :key="index">
         <div class="left">
           <input type="checkbox" v-model="todoItem.completed">
-          <div :class="['task', {'completed': todoItem.completed}]">{{ todoItem.name }}</div>
+          <div class="date__time">
+            <div :class="['task', {'completed': todoItem.completed}]">{{ todoItem.name }}</div>
+            <div class="date">Added {{formatDate(todoItem.added)}}</div>
+          </div>
         </div>
         <div class="options">
           <button @click="editTodo(todoItem.id)"><img class="edit" src="@/assets/akar-icons_edit.svg" alt="delete"></button>
@@ -24,6 +27,7 @@
   </div>
 </template>
 <script>
+import {format} from 'date-fns'
 import NavBar from './NavBar.vue';
 import { mapState, mapGetters } from 'vuex';
 export default {
@@ -38,7 +42,8 @@ export default {
               name: this.todo,
               id: uniqueID,
               priority: 0,
-              completed: false
+              completed: false,
+              added: new Date()
             };
             if (this.todo) {
                 this.todoList.push(todo);
@@ -85,6 +90,9 @@ export default {
           });
           this.todo = "";
           this.isEditing = null
+        },
+        formatDate(date){
+          return format(date, 'do MMMM yyy hh:mm aaa')
         }
     },
     computed: {
@@ -123,8 +131,8 @@ input[type="text"]{
 
 /* Create a custom checkbox */
 input[type="checkbox"]{
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   background-color: #D9D9D9;
   border-radius: 4px;
   margin-right: 12px;
@@ -154,6 +162,15 @@ input[type="checkbox"]{
   opacity: 0.5;
   pointer-events: none;
 }
+.date__time {
+  display: flex;
+  flex-direction: column;
+}
+.date{
+  font-size: 13px;
+  color: grey;
+}
+
 .todo{
   display: flex;
   justify-content: space-between;
