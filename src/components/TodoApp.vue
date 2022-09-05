@@ -9,7 +9,7 @@
       <div :class="['todo', {'editing': isEditing === todoItem.id}]" v-for="todoItem, index in sortList" :key="index">
         <div class="left">
           <input type="checkbox" v-model="todoItem.completed">
-          <div :class="{'completed': todoItem.completed}">{{ todoItem.name }}</div>
+          <div :class="['task', {'completed': todoItem.completed}]">{{ todoItem.name }}</div>
         </div>
         <div class="options">
           <button @click="editTodo(todoItem.id)"><img class="edit" src="@/assets/akar-icons_edit.svg" alt="delete"></button>
@@ -25,9 +25,9 @@
 </template>
 <script>
 import NavBar from './NavBar.vue';
+import { mapState, mapGetters } from 'vuex';
 export default {
     data: () => ({
-        todoList: [],
         todo: "",
         isEditing: null
     }),
@@ -88,10 +88,12 @@ export default {
         }
     },
     computed: {
-        sortList() {
-            return [...this.todoList].sort((a, b) => b.priority - a.priority);
-            // return this.todoList;
-        }
+      ...mapState(['todoList']),
+      ...mapGetters(['sortList']),
+      // sortList() {
+      //       return [...this.todoList].sort((a, b) => b.priority - a.priority);
+      //       // return this.todoList;
+      //   }
     },
     components: { NavBar }
 }
@@ -129,6 +131,9 @@ input[type="checkbox"]{
   cursor: pointer;
 }
 
+.task{
+  font-weight: 500;
+}
 .completed {
   text-decoration: line-through;
   opacity: 0.5;

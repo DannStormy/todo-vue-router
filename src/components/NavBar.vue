@@ -6,6 +6,7 @@
     <ul class="nav-items">
       <router-link to="/">Home</router-link>
       <router-link to="/todos">Todos</router-link>
+      <router-link to="/store">Store</router-link>
     </ul>
   </div>
 </template>
