@@ -15,11 +15,13 @@ const store = createStore({
     },
     updateTodo(state, {id, name}){
       state.todoList.map((item) => {
-        console.log(id, name)
         if (item.id === id){
           item.name = name
         }
       })
+    },
+    delTodo(state, index){
+      state.todoList.splice(index, 1);
     }
   },
   actions: {
@@ -29,6 +31,9 @@ const store = createStore({
     },
     saveTodo: (context, payload) => {
       context.commit('updateTodo', payload)
+    },
+    deleteTodo(context, payload){
+      context.commit('delTodo', payload)
     }
   }
 });

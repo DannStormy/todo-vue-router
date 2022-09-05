@@ -19,8 +19,8 @@
           <button @click="delTodo(index)"><img class="delete" src="@/assets/Vector.svg" alt="delete"></button>
           <div class="priority">{{todoItem.priority}}</div>
           <div class="up-down">
-            <img @click="increasePriority(todoItem.id)" src="@/assets/Vector1.svg" alt="arrow-up" srcset="">
-            <img @click="decreasePriority(todoItem.id)" src="@/assets/Vector2.svg" alt="arrow-down" srcset="">
+            <img @click=todoItem.priority++ src="@/assets/Vector1.svg" alt="arrow-up" srcset="">
+            <img @click=todoItem.priority-- src="@/assets/Vector2.svg" alt="arrow-down" srcset="">
           </div>
         </div>
       </div>
@@ -53,27 +53,7 @@ export default {
           this.todo = "";
         },
         delTodo(index) {
-          console.log("Index is: ", index);
-          console.log(this.todoList);
-          this.todoList.splice(index, 1);
-        },
-        increasePriority(id) {
-            const updatedTodo = this.todoList.map((todoItem) => {
-                if (todoItem.id === id) {
-                    return { ...todoItem, priority: todoItem.priority + 1 };
-                }
-                return todoItem;
-            });
-            this.todoList = updatedTodo;
-        },
-        decreasePriority(id) {
-            const updatedTodo = this.todoList.map((todoItem) => {
-                if (todoItem.id === id) {
-                    return { ...todoItem, priority: todoItem.priority - 1 };
-                }
-                return todoItem;
-            });
-            this.todoList = updatedTodo;
+          this.deleteTodoStore(index)
         },
         editTodo(id){
             this.isEditing = id
@@ -81,16 +61,8 @@ export default {
             this.todo = editItem.name;
         },
         saveTodo(){
-          // if (!this.todo){
-          //   return
-          // }
           const todoID = this.isEditing;
           this.saveTodoStore({id:todoID, name:this.todo})
-          // this.todoList.map((todoItem) => {
-          //   if (todoItem.id === todoID) {
-          //       todoItem.name = this.todo
-          //   }
-          // });
           this.todo = "";
           this.isEditing = null
         },
@@ -98,7 +70,11 @@ export default {
           return format(date, 'do MMMM yyy hh:mm aaa')
         },
         ...mapMutations(['updateList']),
-        ...mapActions({addTodoStore: 'addTodo', saveTodoStore: 'saveTodo'})
+        ...mapActions({
+          addTodoStore: 'addTodo',
+          saveTodoStore: 'saveTodo',
+          deleteTodoStore: 'deleteTodo'
+        })
     },
     computed: {
       ...mapState(['todoList']),
