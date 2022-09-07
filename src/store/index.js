@@ -1,40 +1,11 @@
 import { createStore } from "vuex";
+import todos from "./modules/todos";
+import shop from "./modules/shop";
 
 const store = createStore({
-  state: () => ({
-    todoList: [],
-  }),
-  getters: {
-    sortList: (state) => {
-      return [...state.todoList].sort((a, b) => b.priority - a.priority);
-    }
-  },
-  mutations: {
-    updateList (state, newList) {
-      state.todoList = newList
-    },
-    updateTodo(state, {id, name}){
-      state.todoList.map((item) => {
-        if (item.id === id){
-          item.name = name
-        }
-      })
-    },
-    delTodo(state, index){
-      state.todoList.splice(index, 1);
-    }
-  },
-  actions: {
-    addTodo({commit, state}, todo){
-      const newList = [...state.todoList, todo];
-      commit('updateList', newList)
-    },
-    saveTodo: (context, payload) => {
-      context.commit('updateTodo', payload)
-    },
-    deleteTodo(context, payload){
-      context.commit('delTodo', payload)
-    }
+  modules: {
+    todos,
+    shop
   }
 });
 export default store;

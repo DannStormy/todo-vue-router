@@ -56,9 +56,9 @@ export default {
           this.deleteTodoStore(index)
         },
         editTodo(id){
-            this.isEditing = id
-            const editItem = this.todoList.find((item => item.id === id));
-            this.todo = editItem.name;
+          this.isEditing = id
+          const editItem = this.sortList.find((item => item.id === id));
+          this.todo = editItem.name;
         },
         saveTodo(){
           const todoID = this.isEditing;

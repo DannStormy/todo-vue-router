@@ -2,43 +2,46 @@
   <NavBar />
   <div class="cart__count">
     <p>Items in Cart: </p>
-    <div class="circle">{{updateCartCount}}</div>
+    <div class="circle">{{updateCartLength}}</div>
   </div>
   <div class="product__container">
-    <div class="product" v-for="product, index in products" :key="index">
+    <div class="product" v-for="product, index in productList" :key="index">
       <img :src="product.image" alt="prod">
       <p class="title">{{product.title}}</p>
-      <button @click="removeFromCart(product.id)" v-if="cart.includes(product.id)">Remove</button>
-      <button @click="addToCart(product.id)" v-else>Add to Cart</button>
+      <button @click="removeFromCart(product)" v-if="cart.includes(product)">Remove</button>
+      <button @click="addToCart(product)" v-else>Add to Cart</button>
     </div>
   </div>
 </template>
 <script>
-import { productList } from '@/productList';
+// import { productList } from '@/productList';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import NavBar from './NavBar.vue';
 export default {
+    name: 'ShoppingList',
     data: () => ({
       cartCount: 0,
-      cart: [],
-      isAdded: false,
-      products: productList
     }),
     methods: {
-      addToCart(id) {
-        const addToCart = this.products.find(product => product.id === id);
-        if (!this.cart.includes(addToCart.id)){
-          this.cart.push(addToCart.id);
-        }
+      addToCart(item) {
+        this.newCart(item)
       },
-      removeFromCart(id){
-        let index = this.cart.indexOf(id);
-        if (index != -1) this.cart.splice(index, 1);
-      }
+      removeFromCart(item){
+        console.log('Removing ', item)
+        console.log(this.cart)
+        this.removeCart(item)
+      },
+      ...mapActions({newCart: 'addToCart', removeCart: 'removeFromCart'}),
+    },
+    mounted(){
+      console.log("Now mounted")
     },
     computed: {
-      updateCartCount(){
-        return this.cart.length;
-      }
+      ...mapState({
+        productList: (state) => state.shop.productList,
+        cart: (state) => state.shop.cart
+      }),
+     ...mapGetters(["updateCartLength"])
     },
     components: { NavBar }
 }
@@ -56,8 +59,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 10px;
-    height: 10px;
+    width: 5px;
+    height: 5px;
     padding: 20px;
     color: white;
     margin-left: 5px;
